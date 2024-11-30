@@ -1,9 +1,9 @@
-import homeRouter from './web/homeRouter.js';
+import siteRouter from './web/siteRouter.js';
 import userRouterAPI from './apis/handleUserAPI.js';
 
 
 const setRoutes = app => {
-   app.use('/', homeRouter);
+   app.use('/', siteRouter);
    app.use('/v1/api', userRouterAPI);
 };
 
