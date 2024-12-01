@@ -1,5 +1,5 @@
 import siteRouter from './web/siteRouter.js';
-import userRouterAPI from './apis/handleUserAPI.js';
+import userRouterAPI from './apis/userRouter.js';
 
 
 const setRoutes = app => {
