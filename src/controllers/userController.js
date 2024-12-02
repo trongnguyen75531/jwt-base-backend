@@ -1,4 +1,10 @@
-import createUserService from '../services/userService.js';
+import { compareSync } from 'bcrypt';
+import {
+   createUserService,
+   getUserService,
+   handleLoginService
+
+} from '../services/userService.js';
 
 const userController = {
    async createUserAPI(req, res, next) {
@@ -7,13 +13,19 @@ const userController = {
       res.json(userInfo);
    },
 
-   getUserAPI(req, res, next) {
-      res.json({
-         id: '24550048',
-         email: 'trongnguyen@gmail.com',
-         username: 'trongnguyendev'
-      });
-   }
+   async handleLoginAPI(req, res, next) {
+      const formData = req.body;
+      const resData = await handleLoginService(formData, next);
+      console.log('Check', resData);
+      res.json(resData);
+   },
+
+   async getUserAPI(req, res, next) {
+      const user = await getUserService();
+      res.json(user);
+   },
+
+
 };
 
 export default userController;
