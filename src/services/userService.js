@@ -1,4 +1,6 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 import User from '../models/userSchema.js';
 
 export const createUserService = async (formData, next) => {
@@ -30,12 +32,20 @@ export const handleLoginService = async (formData, next) => {
       if (!isMatchPassword) {
          return { code: 2, message: 'Email/Password không hợp lệ' }
       } else {
-         return { code: 'OK', message: 'Login thành công' }
+         const payload = { email }
+
+         const token = jwt.sign(
+            payload,
+            process.env.SECRET_KEY,
+            { expiresIn: process.env.JWT_EXPIRES }
+         );
+
+         return { token, user: { email } }
       }
 
    } catch (error) {
       console.log('Có lỗi, thử lại tác vụ khác.');
-      return null;
+      next(error);
    }
 }
 

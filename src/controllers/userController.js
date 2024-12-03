@@ -1,4 +1,3 @@
-import { compareSync } from 'bcrypt';
 import {
    createUserService,
    getUserService,
@@ -16,7 +15,6 @@ const userController = {
    async handleLoginAPI(req, res, next) {
       const formData = req.body;
       const resData = await handleLoginService(formData, next);
-      console.log('Check', resData);
       res.json(resData);
    },
 
