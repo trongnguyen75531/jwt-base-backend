@@ -1,20 +1,29 @@
-import bcrypt from 'bcrypt';
+import bcrypt, { compareSync } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/userSchema.js';
 
 export const createUserService = async (formData, next) => {
-   const { password } = formData;
+   const { email, password } = formData;
    try {
+      const user = await User.findOne({ email });
+
+      if (user) {
+         return {
+            statusCode: 400,
+            message: 'Email đã tồn tại. Vui lòng chọn email khác.'
+         }
+      }
+
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       const userInfo = await User.create({ ...formData, password: hashedPassword });
-      console.log('User đăng ký tài khoản thành công');
+      console.log('Đăng ký tài khoản thành công');
 
       return userInfo;
    } catch (error) {
-      console.log('User đăng ký tài khoản thất bại');
+      console.log('Đăng ký tài khoản thất bại');
       next(error);
    }
 };
@@ -33,14 +42,13 @@ export const handleLoginService = async (formData, next) => {
          return { code: 2, message: 'Email/Password không hợp lệ' }
       } else {
          const payload = { email }
-
          const token = jwt.sign(
             payload,
             process.env.SECRET_KEY,
             { expiresIn: process.env.JWT_EXPIRES }
          );
 
-         return { token, user: { email } }
+         return { code: 0, token, user: { email } }
       }
 
    } catch (error) {
@@ -49,7 +57,7 @@ export const handleLoginService = async (formData, next) => {
    }
 }
 
-export const getUserService = async () => {
+export const getUsersService = async () => {
    return await User.find();
 };
 

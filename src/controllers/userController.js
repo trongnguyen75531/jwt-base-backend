@@ -1,6 +1,6 @@
 import {
    createUserService,
-   getUserService,
+   getUsersService,
    handleLoginService
 
 } from '../services/userService.js';
@@ -9,7 +9,11 @@ const userController = {
    async createUserAPI(req, res, next) {
       const formData = req.body;
       const userInfo = await createUserService(formData, next);
-      res.json(userInfo);
+      if (userInfo.statusCode === 400) {
+         res.status(400).json(userInfo);
+      } else {
+         res.json(userInfo);
+      }
    },
 
    async handleLoginAPI(req, res, next) {
@@ -18,8 +22,8 @@ const userController = {
       res.json(resData);
    },
 
-   async getUserAPI(req, res, next) {
-      const user = await getUserService();
+   async getUsersAPI(req, res, next) {
+      const user = await getUsersService();
       res.json(user);
    },
 
