@@ -23,8 +23,8 @@ const userController = {
    },
 
    async getUsersAPI(req, res, next) {
-      const user = await getUsersService();
-      res.json(user);
+      const listUsers = await getUsersService(next);
+      res.json(listUsers);
    },
 
 

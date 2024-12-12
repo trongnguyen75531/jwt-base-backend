@@ -1,6 +1,5 @@
-import bcrypt, { compareSync } from 'bcrypt';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
 import User from '../models/userSchema.js';
 
 export const createUserService = async (formData, next) => {
@@ -48,7 +47,7 @@ export const handleLoginService = async (formData, next) => {
             { expiresIn: process.env.JWT_EXPIRES }
          );
 
-         return { code: 0, token, user: { email } }
+         return { code: 0, token, user: { email } };
       }
 
    } catch (error) {
@@ -57,7 +56,11 @@ export const handleLoginService = async (formData, next) => {
    }
 }
 
-export const getUsersService = async () => {
-   return await User.find();
+export const getUsersService = async (next) => {
+   try {
+      return await User.find().select('-password');
+   } catch (error) {
+      next(error);
+   }
 };
 
